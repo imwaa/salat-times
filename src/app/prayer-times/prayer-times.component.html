@@ -1,0 +1,27 @@
+<div class="main-container">
+  <div class="current-time">{{ dateTime | async | date: "H:mm:ss" }}</div>
+  <mat-card class="salat-time"
+    ><span>Fajr</span
+    ><span>{{ salatTime?.timings?.Fajr?.replace("(CET)", "") }}</span></mat-card
+  >
+  <mat-card class="salat-time"
+    ><span>Dhuhr</span
+    ><span>{{
+      salatTime?.timings?.Dhuhr?.replace("(CET)", "")
+    }}</span></mat-card
+  >
+  <mat-card class="salat-time"
+    ><span>Asr</span
+    ><span>{{ salatTime?.timings?.Asr?.replace("(CET)", "") }}</span></mat-card
+  >
+  <mat-card class="salat-time"
+    ><span>Magrib</span
+    ><span>{{
+      salatTime?.timings?.Maghrib?.replace("(CET)", "")
+    }}</span></mat-card
+  >
+  <mat-card class="salat-time"
+    ><span>Isha</span
+    ><span>{{ salatTime?.timings?.Isha?.replace("(CET)", "") }}</span></mat-card
+  >
+</div>
