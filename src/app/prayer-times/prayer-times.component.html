@@ -1,5 +1,11 @@
 <div class="main-container">
-  <div class="current-time">{{ dateTime | async | date: "H:mm:ss" }}</div>
+  <div class="current-time">
+    <p>{{ dateTime | async | date: "H:mm:ss" }}</p>
+    <p>
+      {{ salatTime?.date?.hijri?.month?.en }}
+      {{ salatTime?.date?.hijri?.day }},{{ salatTime?.date?.hijri?.year }} AH
+    </p>
+  </div>
   <mat-card class="salat-time"
     ><span>Fajr</span
     ><span>{{ salatTime?.timings?.Fajr?.replace("(CET)", "") }}</span></mat-card
