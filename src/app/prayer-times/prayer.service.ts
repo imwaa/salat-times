@@ -14,7 +14,7 @@ export class PrayerService {
 
   getPrayer() {
     return this.http.get<salatApiResponse>(
-      'http://api.aladhan.com/v1/calendarByCity?city=Ans&country=Belgique&method=15&month=10&year=2022'
+      'https://api.aladhan.com/v1/calendarByCity?city=Ans&country=Belgique&method=15&month=10&year=2022'
     );
   }
 }
