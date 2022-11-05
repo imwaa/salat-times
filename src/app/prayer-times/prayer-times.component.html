@@ -1,32 +1,36 @@
 <div class="main-container">
   <div class="current-time">
-    <p>{{ dateTime | async | date: "H:mm:ss" }}</p>
+    <p>{{ dateTime | date: "H:mm:ss" }}</p>
     <p>
       {{ salatTime?.date?.hijri?.month?.en }}
       {{ salatTime?.date?.hijri?.day }},{{ salatTime?.date?.hijri?.year }} AH
     </p>
   </div>
-  <mat-card class="salat-time"
+  <mat-card class="salat-time" [ngClass]="{ nextPrayer: nextPrayer === 'Fajr' }"
     ><span>Fajr</span
     ><span>{{ salatTime?.timings?.Fajr?.replace("(CET)", "") }}</span></mat-card
   >
-  <mat-card class="salat-time"
+  <mat-card
+    class="salat-time"
+    [ngClass]="{ nextPrayer: nextPrayer === 'Dhuhr' }"
     ><span>Dhuhr</span
     ><span>{{
       salatTime?.timings?.Dhuhr?.replace("(CET)", "")
     }}</span></mat-card
   >
-  <mat-card class="salat-time"
+  <mat-card class="salat-time" [ngClass]="{ nextPrayer: nextPrayer === 'Asr' }"
     ><span>Asr</span
     ><span>{{ salatTime?.timings?.Asr?.replace("(CET)", "") }}</span></mat-card
   >
-  <mat-card class="salat-time"
+  <mat-card
+    class="salat-time"
+    [ngClass]="{ nextPrayer: nextPrayer === 'Maghrib?' }"
     ><span>Magrib</span
     ><span>{{
       salatTime?.timings?.Maghrib?.replace("(CET)", "")
     }}</span></mat-card
   >
-  <mat-card class="salat-time"
+  <mat-card class="salat-time" [ngClass]="{ nextPrayer: nextPrayer === 'Isha' }"
     ><span>Isha</span
     ><span>{{ salatTime?.timings?.Isha?.replace("(CET)", "") }}</span></mat-card
   >

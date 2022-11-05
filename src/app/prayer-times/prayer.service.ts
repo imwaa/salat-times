@@ -19,7 +19,7 @@ export class PrayerService {
   getPrayer() {
     let date = formatDate(Date.now(), 'dd-MM-YYYY', this.locale);
     return this.http.get<salatApiResponse>(
-      'https://api.aladhan.com/v1/calendarByCity?city=Ans&country=Belgique&method=15&year=2022&annual=true'
+      'https://api.aladhan.com/v1/calendarByCity?city=Ans&country=Belgique&method=15&year=2022&annual=true&adjustment=1'
     );
   }
 

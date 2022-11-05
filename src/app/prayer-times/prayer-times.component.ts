@@ -11,15 +11,50 @@ import { DatePipe, formatDate } from '@angular/common';
 })
 export class PrayerTimesComponent implements OnInit {
   response: any;
-  dateTime: Observable<Date> = of(new Date());
+  dateTime: Date = new Date();
   formatedDate: any;
   salatTime: Datum | undefined;
+  nextPrayer: string = '';
 
   constructor(
     @Inject(LOCALE_ID) private locale: string,
     private prayerService: PrayerService
   ) {
     this.formatedDate = formatDate(Date.now(), 'dd-MM-YYYY', this.locale);
+    timer(0, 1000).subscribe(() => {
+      this.dateTime = new Date();
+      this.checkNextPrayer();
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadPrayers();
+  }
+
+  checkNextPrayer() {
+    const timingsTolistOrdered = [
+      { salat: 'Fajr', time: this.salatTime?.timings.Fajr as string },
+      { salat: 'Dhuhr', time: this.salatTime?.timings.Dhuhr as string },
+      { salat: 'Asr', time: this.salatTime?.timings.Asr as string },
+      { salat: 'Maghrib', time: this.salatTime?.timings.Maghrib as string },
+      { salat: 'Isha', time: this.salatTime?.timings.Isha as string },
+    ];
+    const nextPrayers: string[] = [];
+    timingsTolistOrdered.forEach((el) => {
+      const [hours, minute] = el.time.split(':');
+      if (new Date().getHours() < parseInt(hours)) {
+        nextPrayers.push(el.salat);
+      } else if (new Date().getHours() == parseInt(hours)) {
+        if (new Date().getMinutes() <= parseInt(minute)) {
+          nextPrayers.push(el.salat);
+        }
+      }
+    });
+    if (nextPrayers[0] == undefined) nextPrayers.push('Fajr');
+    this.nextPrayer = nextPrayers[0];
+  }
+
+  loadPrayers() {
     const storage: Array<Datum[]> | null =
       this.prayerService.getPrayersFromLocal();
     if (storage) {
@@ -37,18 +72,11 @@ export class PrayerTimesComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.dateTime = timer(0, 1000).pipe(
-      map(() => {
-        return new Date();
-      })
-    );
-  }
-
   getPrayers(storage: Array<Datum[]>) {
     const currentMonth: Datum[] = storage[new Date().getMonth()];
     this.salatTime = currentMonth.find(
       (time) => time.date.gregorian.date == this.formatedDate
     );
+    console.log(this.salatTime);
   }
 }
