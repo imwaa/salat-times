@@ -1,4 +1,4 @@
-import { Datum } from './interfaces/index';
+import { Datum, salatApiResponse } from './interfaces/index';
 import { PrayerService } from './prayer.service';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { map, Observable, of, timer } from 'rxjs';
@@ -12,27 +12,27 @@ import { DatePipe, formatDate } from '@angular/common';
 export class PrayerTimesComponent implements OnInit {
   response: any;
   dateTime: Observable<Date> = of(new Date());
-  formatedData: any;
+  formatedDate: any;
   salatTime: Datum | undefined;
 
   constructor(
     @Inject(LOCALE_ID) private locale: string,
-    private prayerTimesService: PrayerService
+    private prayerService: PrayerService
   ) {
-    this.prayerTimesService
-      .getPrayer()
-      .pipe(
-        map((res) => {
-          this.formatedData = formatDate(Date.now(), 'dd-MM-YYYY', this.locale);
-          this.salatTime = res.data.find(
-            (time) => time.date.gregorian.date === this.formatedData
-          );
-          console.log(this.salatTime);
-        })
-      )
-      .subscribe((res) => {
-        this.response = res;
+    this.formatedDate = formatDate(Date.now(), 'dd-MM-YYYY', this.locale);
+    const tmp = this.getPrayers();
+    if (tmp) {
+      this.salatTime = tmp;
+    } else {
+      this.prayerService.getPrayer().subscribe((res: salatApiResponse) => {
+        const liste: Array<Datum[]> = [];
+        for (let i = 1; i <= 12; i++) {
+          liste.push(res.data[i]);
+        }
+        console.log(liste);
+        localStorage.setItem('prayers', JSON.stringify(liste));
       });
+    }
   }
 
   ngOnInit(): void {
@@ -41,5 +41,21 @@ export class PrayerTimesComponent implements OnInit {
         return new Date();
       })
     );
+  }
+
+  getPrayers(): Datum | null {
+    const storage: Array<Datum[]> | null =
+      this.prayerService.getPrayersFromLocal();
+    if (storage) {
+      console.log(storage);
+      const currentMonth: Datum[] = storage[new Date().getMonth()];
+      console.log(currentMonth);
+      console.log(this.formatedDate);
+      const foundDate = currentMonth.find(
+        (time) => time.date.gregorian.date == this.formatedDate
+      );
+      return foundDate ? foundDate : null;
+    }
+    return null;
   }
 }

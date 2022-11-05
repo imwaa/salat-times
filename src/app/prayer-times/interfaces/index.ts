@@ -1,7 +1,7 @@
 export interface salatApiResponse {
   code: number;
   status: string;
-  data: Datum[];
+  data: { [key: string]: Datum[] };
 }
 
 export interface Datum {
