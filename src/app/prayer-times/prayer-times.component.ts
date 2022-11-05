@@ -24,6 +24,7 @@ export class PrayerTimesComponent implements OnInit {
     timer(0, 1000).subscribe(() => {
       this.dateTime = new Date();
       this.checkNextPrayer();
+      console.log(this.nextPrayer);
     });
   }
 
