@@ -1,8 +1,8 @@
 import { Datum, salatApiResponse } from './interfaces/index';
 import { PrayerService } from './prayer.service';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { map, Observable, of, timer } from 'rxjs';
-import { DatePipe, formatDate } from '@angular/common';
+import { timer } from 'rxjs';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-prayer-times',
@@ -14,7 +14,7 @@ export class PrayerTimesComponent implements OnInit {
   dateTime: Date = new Date();
   formatedDate: any;
   salatTime: Datum | undefined;
-  nextPrayer: string = '';
+  nextPrayer: { salat: string; time: string } = { salat: '', time: '' };
 
   constructor(
     @Inject(LOCALE_ID) private locale: string,
@@ -24,7 +24,6 @@ export class PrayerTimesComponent implements OnInit {
     timer(0, 1000).subscribe(() => {
       this.dateTime = new Date();
       this.checkNextPrayer();
-      console.log(this.nextPrayer);
     });
   }
 
@@ -40,18 +39,22 @@ export class PrayerTimesComponent implements OnInit {
       { salat: 'Maghrib', time: this.salatTime?.timings.Maghrib as string },
       { salat: 'Isha', time: this.salatTime?.timings.Isha as string },
     ];
-    const nextPrayers: string[] = [];
+    const nextPrayers: { salat: string; time: string }[] = [];
     timingsTolistOrdered.forEach((el) => {
       const [hours, minute] = el.time.split(':');
       if (new Date().getHours() < parseInt(hours)) {
-        nextPrayers.push(el.salat);
+        nextPrayers.push(el);
       } else if (new Date().getHours() == parseInt(hours)) {
         if (new Date().getMinutes() <= parseInt(minute)) {
-          nextPrayers.push(el.salat);
+          nextPrayers.push(el);
         }
       }
     });
-    if (nextPrayers[0] == undefined) nextPrayers.push('Fajr');
+    if (nextPrayers[0] == undefined)
+      nextPrayers.push({
+        salat: 'Fajr',
+        time: this.salatTime?.timings.Fajr as string,
+      });
     this.nextPrayer = nextPrayers[0];
   }
 
