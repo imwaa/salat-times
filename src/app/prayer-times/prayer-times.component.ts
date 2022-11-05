@@ -20,9 +20,10 @@ export class PrayerTimesComponent implements OnInit {
     private prayerService: PrayerService
   ) {
     this.formatedDate = formatDate(Date.now(), 'dd-MM-YYYY', this.locale);
-    const tmp = this.getPrayers();
-    if (tmp) {
-      this.salatTime = tmp;
+    const storage: Array<Datum[]> | null =
+      this.prayerService.getPrayersFromLocal();
+    if (storage) {
+      this.getPrayers(storage);
     } else {
       this.prayerService.getPrayer().subscribe((res: salatApiResponse) => {
         const liste: Array<Datum[]> = [];
@@ -31,6 +32,7 @@ export class PrayerTimesComponent implements OnInit {
         }
         console.log(liste);
         localStorage.setItem('prayers', JSON.stringify(liste));
+        this.getPrayers(liste);
       });
     }
   }
@@ -43,19 +45,10 @@ export class PrayerTimesComponent implements OnInit {
     );
   }
 
-  getPrayers(): Datum | null {
-    const storage: Array<Datum[]> | null =
-      this.prayerService.getPrayersFromLocal();
-    if (storage) {
-      console.log(storage);
-      const currentMonth: Datum[] = storage[new Date().getMonth()];
-      console.log(currentMonth);
-      console.log(this.formatedDate);
-      const foundDate = currentMonth.find(
-        (time) => time.date.gregorian.date == this.formatedDate
-      );
-      return foundDate ? foundDate : null;
-    }
-    return null;
+  getPrayers(storage: Array<Datum[]>) {
+    const currentMonth: Datum[] = storage[new Date().getMonth()];
+    this.salatTime = currentMonth.find(
+      (time) => time.date.gregorian.date == this.formatedDate
+    );
   }
 }
