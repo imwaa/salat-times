@@ -1,12 +1,16 @@
 <div class="main-container">
   <div class="current-time">
-    <p class="current-hour">{{ dateTime | date: "H:mm:ss" }}</p>
+    <p class="current-hour">{{ nextPrayer.salat }}</p>
+    <p class="current-hour">{{ nextPrayer.time.replace("(CET)", "") }}</p>
+    <!-- <p class="current-hour">{{ dateTime | date: "H:mm:ss" }}</p>
     <p>
       {{ salatTime?.date?.hijri?.month?.en }}
       {{ salatTime?.date?.hijri?.day }},{{ salatTime?.date?.hijri?.year }} AH
-    </p>
+    </p> -->
   </div>
-  <mat-card class="salat-time" [ngClass]="{ nextPrayer: nextPrayer === 'Fajr' }"
+  <mat-card
+    class="salat-time"
+    [ngClass]="{ nextPrayer: nextPrayer.salat === 'Fajr' }"
     ><div class="salat-title">
       <img src="../../assets/pictures/icons8-lever-du-soleil-24.png" />
       <span>Fajr</span>
@@ -15,14 +19,16 @@
   >
   <mat-card
     class="salat-time"
-    [ngClass]="{ nextPrayer: nextPrayer === 'Dhuhr' }"
+    [ngClass]="{ nextPrayer: nextPrayer.salat === 'Dhuhr' }"
     ><div class="salat-title">
       <img src="../../assets/pictures/icons8-soleil-24.png" />
       <span>Dhuhr</span>
     </div>
     <span>{{ salatTime?.timings?.Dhuhr?.replace("(CET)", "") }}</span></mat-card
   >
-  <mat-card class="salat-time" [ngClass]="{ nextPrayer: nextPrayer === 'Asr' }"
+  <mat-card
+    class="salat-time"
+    [ngClass]="{ nextPrayer: nextPrayer.salat === 'Asr' }"
     ><div class="salat-title">
       <img src="../../assets/pictures/icons8-soleil-24 (1).png" />
       <span>Asr</span>
@@ -31,7 +37,7 @@
   >
   <mat-card
     class="salat-time"
-    [ngClass]="{ nextPrayer: nextPrayer === 'Maghrib' }"
+    [ngClass]="{ nextPrayer: nextPrayer.salat === 'Maghrib' }"
     ><div class="salat-title">
       <img src="../../assets/pictures/icons8-le-coucher-du-soleil-24.png" />
       <span>Maghrib</span>
@@ -40,7 +46,9 @@
       salatTime?.timings?.Maghrib?.replace("(CET)", "")
     }}</span></mat-card
   >
-  <mat-card class="salat-time" [ngClass]="{ nextPrayer: nextPrayer === 'Isha' }"
+  <mat-card
+    class="salat-time"
+    [ngClass]="{ nextPrayer: nextPrayer.salat === 'Isha' }"
     ><div class="salat-title">
       <img src="../../assets/pictures/icons8-ne-pas-déranger-2-24.png" />
       <span>'Isha</span>
